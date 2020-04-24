@@ -1,0 +1,58 @@
+<html>
+<head>
+	<title>TeXcount Graph</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"></script>
+</head>
+<body>
+	<h1>TeXcount Graph</h1>
+	<hr>
+	<div style="display: block; width: 90%">
+		<canvas id="myChart"></canvas>
+	</div>
+
+
+	<script>
+		var xmlHttp = new XMLHttpRequest();
+	    xmlHttp.open( "GET", '/data', false );
+	    xmlHttp.send( null );
+	    var rawData = JSON.parse(xmlHttp.responseText);
+	    var chartData = rawData.map(val => {
+	    	return {t: new Date(val.date), y: val.count};
+	    });
+
+		var ctx = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctx, {
+		    type: 'line',
+		    data: {
+		        datasets: [{
+		            label: '# of Words',
+		            data: chartData,
+		            borderWidth: 2,
+		            borderColor: '#09f',
+		            fill: false
+		        }]
+		    },
+		    options: {
+		        scales: {
+		        	xAxes: [{
+		        		type: 'time',
+		        		distribution: 'series',
+		        		ticks: {
+		        			source: 'data'
+		        		}
+		        	}],
+		            yAxes: [{
+		                ticks: {
+		                    beginAtZero: true
+		                },
+		                scaleLabel: {
+							display: true,
+							labelString: '# of Words'
+						}
+		            }]
+		        }
+		    }
+		});
+	</script>
+</body>
+</html>

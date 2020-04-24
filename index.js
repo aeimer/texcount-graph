@@ -42,13 +42,9 @@ app.get("/data", (req, res) => {
 
 // POST
 app.post("/commit", (req, res) => {
-	var date  = Date.parse(req.body.date);
+	var date  = new Date;
 	var hash  = req.body.hash;
 	var count = parseInt(req.body.count);
-
-	if (date === null) {
-		throw new Error('Date not parseable');
-	}
 
 	fs.readFile(dbPath, function (err, data) {
 		if (err) throw err;

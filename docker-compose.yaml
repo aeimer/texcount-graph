@@ -1,0 +1,10 @@
+version: "3"
+services:
+  tcg:
+    image: aeimer/texcount-graph
+    restart: always
+    volumes:
+      - "./data.json:/app/data.json"
+      - "/etc/localtime:/etc/localtime:ro"
+    ports:
+      - "80:3000"

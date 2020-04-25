@@ -43,8 +43,8 @@ app.get("/data", (req, res) => {
 // POST
 app.post("/commit", (req, res) => {
 	var date  = new Date;
-	var hash  = req.body.hash;
-	var count = parseInt(req.body.count);
+	var hash  = trim(req.body.hash);
+	var count = parseInt(trim(req.body.count));
 
 	fs.readFile(dbPath, function (err, data) {
 		if (err) throw err;

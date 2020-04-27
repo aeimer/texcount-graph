@@ -1,92 +1,94 @@
 <html>
 <head>
-	<title>TeXcount Graph</title>
-	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"></script>
-	<style type="text/css">
-		body {
-			text-align: center;
-		}
+  <title>TeXcount Graph</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"></script>
+  <style type="text/css">
+    body {
+      text-align: center;
+    }
 
-		.wrap {
-			display: block;
-			width: 80%;
-			margin-left: auto;
-			margin-right: auto;
-		}
-	</style>
-	<script>
-		// Function
-		function loadData() {
-			var xhr = new XMLHttpRequest();
-		    xhr.open("GET", '/data', true);
-		    xhr.onload = function(e) {
-		    	if (xhr.readyState === 4) {
-					if (xhr.status === 200) {
-						var rawData = JSON.parse(xhr.responseText);
-						var processedData = rawData.map(val => {
-					    	return {t: new Date(val.date), y: val.count};
-	    				});
-					    setChartData(processedData);
-					} else {
-						console.error(xhr.statusText);
-					}
-				}
-		    }
-		    xhr.onerror = function (e) {
-				console.error(xhr.statusText);
-			};
-		    xhr.send(null);
-		}
+    .wrap {
+      display: block;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+  <script>
+    // Function
+    function loadData() {
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", '/data', true);
+      xhr.onload = function(e) {
+        if (xhr.readyState === 4) {
+          if (xhr.status === 200) {
+            var rawData = JSON.parse(xhr.responseText);
+            var processedData = rawData.map(val => {
+              return {t: new Date(val.date), y: val.count};
+            });
+              setChartData(processedData);
+          } else {
+            console.error(xhr.statusText);
+          }
+        }
+      }
+      xhr.onerror = function (e) {
+        console.error(xhr.statusText);
+      };
+      xhr.send(null);
+    }
 
-		function setChartData(d) {
-			// https://www.chartjs.org/docs/latest/developers/updates.html
-			myChart.data.datasets[0].data = d;
-			myChart.update();
-		}
+    function setChartData(d) {
+      // https://www.chartjs.org/docs/latest/developers/updates.html
+      myChart.data.datasets[0].data = d;
+      myChart.update();
+    }
 
-		// Code
-		loadData();
+    // Code
+    window.onload = () => {
+      loadData();
 
-		setInterval(() => loadData(), 1000 * 60 * 5); // Load data every 5 minutes
+      setInterval(() => loadData(), 1000 * 60 * 5); // Load data every 5 minutes
 
-		var ctx = document.getElementById('myChart').getContext('2d');
-		var myChart = new Chart(ctx, {
-		    type: 'line',
-		    data: {
-		        datasets: [{
-		            label: '# of Words',
-		            data: [], // Is set by setChartData()
-		            borderWidth: 2,
-		            borderColor: '#09f',
-		            fill: false
-		        }]
-		    },
-		    options: {
-		        scales: {
-		        	xAxes: [{
-		        		type: 'time',
-		        		distribution: 'series',
-		        		ticks: {
-		        			source: 'data'
-		        		}
-		        	}],
-		            yAxes: [{
-		                ticks: {},
-		                scaleLabel: {
-							display: true,
-							labelString: '# of Words'
-						}
-		            }]
-		        }
-		    }
-		});
-	</script>
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          datasets: [{
+            label: '# of Words',
+            data: [], // Is set by setChartData()
+            borderWidth: 2,
+            borderColor: '#09f',
+            fill: false
+          }]
+        },
+        options: {
+          scales: {
+            xAxes: [{
+              type: 'time',
+              distribution: 'series',
+              ticks: {
+                source: 'data'
+              }
+            }],
+            yAxes: [{
+              ticks: {},
+              scaleLabel: {
+                display: true,
+                labelString: '# of Words'
+              }
+            }]
+          }
+        }
+      });
+    };
+  </script>
 </head>
 <body>
-	<h1>TeXcount Graph</h1>
-	<hr>
-	<div class="wrap">
-		<canvas id="myChart"></canvas>
-	</div>
+  <h1>TeXcount Graph</h1>
+  <hr>
+  <div class="wrap">
+    <canvas id="myChart"></canvas>
+  </div>
 </body>
 </html>

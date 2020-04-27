@@ -17,6 +17,7 @@
 </head>
 <body>
   <h1>TeXcount Graph</h1>
+  Latest count: <span id="latestCount">0</span>
   <hr>
   <div class="wrap">
     <canvas id="myChart"></canvas>
@@ -24,6 +25,7 @@
 
   <script>
     // Functions
+    /* Load the data, prepare and set them */
     function loadData() {
       var xhr = new XMLHttpRequest();
       xhr.open("GET", '/data', true);
@@ -46,19 +48,31 @@
       xhr.send(null);
     }
 
+    /* set the loaded data to the correct places */
     function setChartData(d) {
+      // Update Chart
       // https://www.chartjs.org/docs/latest/developers/updates.html
       myChart.data.datasets[0].data = d;
       myChart.update();
+
+      // Update other stuff
+      var latestCount = d[d.length - 1].y;
+      document.title = 'TeX-WC - ' + latestCount;
+      lcElem.innerHTML = latestCount;
     }
 
     // Code
+    // To update the vhart every 5 minutes
     window.onload = () => {
       loadData();
       setInterval(() => loadData(), 1000 * 60 * 5); // Load data every 5 minutes
     };
 
+    // document selects
+    var lcElem = document.getElementById('latestCount');
     var ctx = document.getElementById('myChart').getContext('2d');
+
+    // Chart definition
     var myChart = new Chart(ctx, {
       type: 'line',
       data: {

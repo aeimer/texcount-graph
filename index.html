@@ -13,11 +13,16 @@
       margin-left: auto;
       margin-right: auto;
     }
+
+    .grey {
+      color: #999;
+    }
   </style>
 </head>
 <body>
   <h1>TeXcount Graph</h1>
-  Latest count: <span id="latestCount">0</span>
+  Latest count: <span id="latestCount">0</span><br>
+  <small class="grey">Last update: <span id="lastUpdate"></span></small>
   <hr>
   <div class="wrap">
     <canvas id="myChart"></canvas>
@@ -59,6 +64,7 @@
       var latestCount = d[d.length - 1].y;
       document.title = 'TeX-WC | ' + latestCount;
       lcElem.innerHTML = latestCount;
+      luElem.innerHTML = new Date().toLocaleString();
     }
 
     // Code
@@ -70,6 +76,7 @@
 
     // document selects
     var lcElem = document.getElementById('latestCount');
+    var luElem = document.getElementById('lastUpdate');
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Chart definition

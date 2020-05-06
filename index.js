@@ -40,6 +40,10 @@ app.get("/data", (req, res) => {
 	});
 });
 
+app.get("/version", (req, res) => {
+	res.end("APP_VERSION");
+});
+
 // POST
 app.post("/commit", (req, res) => {
 	var date  = new Date;
@@ -55,5 +59,5 @@ app.post("/commit", (req, res) => {
 	    fs.writeFileSync(dbPath, JSON.stringify(json));
 	});
 
-	res.end("yes");
+	res.end("ok");
 });

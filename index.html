@@ -95,12 +95,12 @@
         scales: {
           xAxes: [{
             type: 'time',
-            distribution: 'series',
-            ticks: {
-              source: 'data'
-            },
+            distribution: 'linear',
             time: {
-              unit: 'day'
+              unit: 'day',
+              displayFormats: {
+                day: 'DD.MM.'
+              }
             }
           }],
           yAxes: [{

@@ -41,6 +41,7 @@ app.get("/data", (req, res) => {
 });
 
 app.get("/version", (req, res) => {
+	res.type("text/plain");
 	res.end("APP_VERSION");
 });
 

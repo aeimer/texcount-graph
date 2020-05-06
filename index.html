@@ -32,9 +32,10 @@
     // Functions
     /* Load the data, prepare and set them */
     function loadData() {
+      // Load data
       var xhr = new XMLHttpRequest();
-      xhr.open("GET", '/data', true);
-      xhr.onload = function(e) {
+      xhr.open('GET', '/data', true);
+      xhr.onload = (e) => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             var rawData = JSON.parse(xhr.responseText);
@@ -46,11 +47,32 @@
             console.error(xhr.statusText);
           }
         }
-      }
-      xhr.onerror = function (e) {
-        console.error(xhr.statusText);
       };
+      xhr.onerror = (e) => console.error(xhr.statusText);
       xhr.send(null);
+      
+      // Check for new app version
+      var xhrVersion = new XMLHttpRequest();
+      xhrVersion.open('GET', '/version', true);
+      xhrVersion.onload = (e) => {
+        if (xhrVersion.readyState === 4) {
+          if (xhrVersion.status === 200) {
+            var apiVersion = xhrVersion.responseText;
+            if (appVersion === null) {
+              // First run; Set retrieved version
+              appVersion = apiVersion;
+            } else if (appVersion !== apiVersion) {
+              // Version has changed; Relaod html page
+              location.reload();
+            }
+            // Versions are same; bye
+          } else {
+            console.error(xhrVersion.statusText);
+          }
+        }
+      };
+      xhrVersion.onerror = (e) => console.error(xhrVersion.statusText);
+      xhrVersion.send(null);
     }
 
     /* set the loaded data to the correct places */
@@ -73,6 +95,9 @@
       loadData();
       setInterval(() => loadData(), 1000 * 60 * 5); // Load data every 5 minutes
     };
+
+    // Global vars
+    var appVersion = null;
 
     // document selects
     var lcElem = document.getElementById('latestCount');

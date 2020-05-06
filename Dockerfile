@@ -1,12 +1,17 @@
-FROM node:12
+FROM node:12-alpine
 
 MAINTAINER Alexander Eimer
 
 WORKDIR /app
-EXPOSE 3000
-RUN echo '[]' > data.json
+
+ENV NODE_ENV production
+
+COPY package*.json .
+RUN npm ci --only=production
+
 COPY . .
-RUN npm install --prod
+RUN echo '[]' > data.json
 RUN sed -i s/APP_VERSION/`date +%s`/ index.js
 
+EXPOSE 3000
 CMD ["node", "index.js"]

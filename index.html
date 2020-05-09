@@ -17,12 +17,33 @@
     .grey {
       color: #999;
     }
+
+    .row {
+      display: flex;
+    }
+
+    .col {
+      flex: 50%;
+    }
+
+    .longTimeNoPush {
+      color: red;
+      font-size: 130%;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
   <h1>TeXcount Graph</h1>
-  Latest count: <span id="latestCount">0</span><br>
-  <small class="grey">Last update: <span id="lastUpdate"></span></small>
+  <div class="row">
+    <div class="col">
+      Time since last push: <b id="lastPush"><span>0</span> days</b>
+    </div>
+    <div class="col">
+      Latest count: <span id="latestCount">0</span><br>
+      <small class="grey">Last update: <span id="lastUpdate"></span></small>
+    </div>
+  </div>
   <hr>
   <div class="wrap">
     <canvas id="myChart"></canvas>
@@ -83,10 +104,21 @@
       myChart.update();
 
       // Update other stuff
-      var latestCount = d[d.length - 1].y;
+      var lastDataPoint = d[d.length - 1];
+      var latestCount = lastDataPoint.y;
       document.title = 'TeX-WC | ' + latestCount;
       lcElem.innerHTML = latestCount;
       luElem.innerHTML = new Date().toLocaleString();
+
+      // Last push
+      var pushDiff = new Date() - lastDataPoint.t;
+      pushDiff = (pushDiff/1000/60/60/24).toFixed(1); // From ms to days with one float sign
+      lpElem.childNodes[0].innerHTML = pushDiff;
+      if (pushDiff > 3) {
+        lpElem.classList.add("longTimeNoPush");
+      } else {
+        lpElem.classList.remove("longTimeNoPush");
+      }
     }
 
     // Code
@@ -102,6 +134,7 @@
     // document selects
     var lcElem = document.getElementById('latestCount');
     var luElem = document.getElementById('lastUpdate');
+    var lpElem = document.getElementById('lastPush');
     var ctx = document.getElementById('myChart').getContext('2d');
 
     // Chart definition

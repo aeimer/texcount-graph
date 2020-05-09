@@ -114,7 +114,7 @@
       var pushDiff = new Date() - lastDataPoint.t;
       pushDiff = (pushDiff/1000/60/60/24).toFixed(1); // From ms to days with one float sign
       lpElem.childNodes[0].innerHTML = pushDiff;
-      if (pushDiff > 3) {
+      if (pushDiff >= 3) { // You haven't worked on it for 3 days!
         lpElem.classList.add("longTimeNoPush");
       } else {
         lpElem.classList.remove("longTimeNoPush");

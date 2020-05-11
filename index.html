@@ -2,6 +2,7 @@
 <head>
   <title>TeXcount Graph</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@0.5.7/chartjs-plugin-annotation.min.js"></script>
   <style type="text/css">
     body {
       text-align: center;
@@ -151,6 +152,36 @@
         }]
       },
       options: {
+        annotation: {
+          drawTime: 'afterDatasetsDraw',
+          events: ['click'],
+          annotations: [
+            { // Final goal
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: '20000',
+              borderColor: 'green',
+              borderWidth: 3,
+            },
+            { // Intermediate
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: '10000',
+              borderColor: 'red',
+              borderWidth: 1,
+            },
+            { // End date
+              type: 'line',
+              mode: 'vertical',
+              scaleID: 'x-axis-0',
+              value: Date.parse('2020-07-13T12:00:00'),
+              borderColor: 'black',
+              borderWidth: 3,
+            }
+          ]
+        },
         scales: {
           xAxes: [{
             type: 'time',

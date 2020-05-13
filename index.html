@@ -3,6 +3,7 @@
   <title>TeXcount Graph</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@0.5.7/chartjs-plugin-annotation.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/everpolate@0.0.3/everpolate.browserified.min.js"></script>
   <style type="text/css">
     body {
       text-align: center;
@@ -101,11 +102,12 @@
     function setChartData(d) {
       // Update Chart
       // https://www.chartjs.org/docs/latest/developers/updates.html
+      myChart.data.datasets[0].data = d.slice(0);
+      myChart.data.datasets[0].data.push({t: new Date(), y: latestCount}); // Add datapoint to show current state
+
+      // Define some vals for later
       var lastDataPoint = d[d.length - 1];
       var latestCount = lastDataPoint.y;
-      d.push({t: new Date(), y: latestCount}); // Add datapoint to show current state
-      myChart.data.datasets[0].data = d;
-      myChart.update();
 
       // Update other stuff
       document.title = 'TeX-WC | ' + latestCount;
@@ -121,6 +123,23 @@
       } else {
         lpElem.classList.remove("longTimeNoPush");
       }
+
+      // Extrapolate
+      var dataX = d.map(o => o.t.getTime());
+      var dataY = d.map(o => o.y);
+      var regression = everpolate.linearRegression(dataX, dataY);
+      var annos = myChart.options.annotation.annotations;
+      var annoExtraPolIndex = annos.findIndex(a => {
+        if (a.hasOwnProperty('id'))
+          return a.id.startsWith('extrapolate')
+        return false
+      });
+      annos[annoExtraPolIndex].id = 'extrapolate'+((new Date).getTime());
+      annos[annoExtraPolIndex].value = parseInt(d[0].y);
+      annos[annoExtraPolIndex].endValue = parseInt(regression.evaluate(finalDate)[0]);
+
+      // Update Chart
+      myChart.update();
     }
 
     // Code
@@ -132,6 +151,7 @@
 
     // Global vars
     var appVersion = null;
+    var finalDate = Date.parse('2020-07-13T12:00:00');
 
     // document selects
     var lcElem = document.getElementById('latestCount');
@@ -160,7 +180,7 @@
               type: 'line',
               mode: 'horizontal',
               scaleID: 'y-axis-0',
-              value: '20000',
+              value: 20000,
               borderColor: 'green',
               borderWidth: 3,
             },
@@ -168,7 +188,7 @@
               type: 'line',
               mode: 'horizontal',
               scaleID: 'y-axis-0',
-              value: '10000',
+              value: 10000,
               borderColor: 'red',
               borderWidth: 1,
             },
@@ -176,9 +196,19 @@
               type: 'line',
               mode: 'vertical',
               scaleID: 'x-axis-0',
-              value: Date.parse('2020-07-13T12:00:00'),
+              value: finalDate,
               borderColor: 'black',
               borderWidth: 3,
+            },
+            { // Extraploation
+              id: 'extrapolate',
+              type: 'line',
+              mode: 'horizontal',
+              scaleID: 'y-axis-0',
+              value: 0,
+              endValue: 0,
+              borderColor: 'grey',
+              borderWidth: 1,
             }
           ]
         },

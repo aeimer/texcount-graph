@@ -135,7 +135,7 @@
         return false
       });
       annos[annoExtraPolIndex].id = 'extrapolate'+((new Date).getTime());
-      annos[annoExtraPolIndex].value = parseInt(d[0].y);
+      annos[annoExtraPolIndex].value = parseInt(regression.evaluate(d[0].t.getTime())[0]);
       annos[annoExtraPolIndex].endValue = parseInt(regression.evaluate(finalDate)[0]);
 
       // Update Chart

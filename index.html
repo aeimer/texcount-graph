@@ -100,14 +100,14 @@
 
     /* set the loaded data to the correct places */
     function setChartData(d) {
+      // Define some vals for later
+      var lastDataPoint = d[d.length - 1];
+      var latestCount = lastDataPoint.y;
+
       // Update Chart
       // https://www.chartjs.org/docs/latest/developers/updates.html
       myChart.data.datasets[0].data = d.slice(0);
       myChart.data.datasets[0].data.push({t: new Date(), y: latestCount}); // Add datapoint to show current state
-
-      // Define some vals for later
-      var lastDataPoint = d[d.length - 1];
-      var latestCount = lastDataPoint.y;
 
       // Update other stuff
       document.title = 'TeX-WC | ' + latestCount;

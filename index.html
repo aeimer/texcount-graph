@@ -152,6 +152,7 @@
     // Global vars
     var appVersion = null;
     var finalDate = Date.parse('2022-05-13T12:00:00');
+    var finishDate = Date.parse('2022-05-02T12:00:00');
 
     // document selects
     var lcElem = document.getElementById('latestCount');
@@ -192,7 +193,15 @@
               borderColor: 'red',
               borderWidth: 1,
             },
-            { // End date
+            { // End date - finish
+              type: 'line',
+              mode: 'vertical',
+              scaleID: 'x-axis-0',
+              value: finishDate,
+              borderColor: 'gray',
+              borderWidth: 2,
+            },
+            { // End date - final
               type: 'line',
               mode: 'vertical',
               scaleID: 'x-axis-0',
